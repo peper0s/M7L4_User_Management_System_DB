@@ -44,3 +44,22 @@ def test_add_new_user(setup_database, connection):
 Тест аутентификации пользователя с неправильным паролем.
 Тест отображения списка пользователей.
 """
+def test_add_existing_user(setup_database, connection):
+    """Тест добавления пользователя с существующим логином."""
+    add_user('ttt', 'yyy', 'zzz')
+    assert add_user('ttt', 'yyy2', 'zzz2') == False, "Добавление пользователя с существующим логином должно вернуть False."
+
+def test_authenticate_user(setup_database, connection):
+    add_user('rrr', 'ccc', 'ddd')
+    assert authenticate_user('rrr', 'ddd') == True
+
+def test_authenticate_nonexistent_user(setup_database, connection):
+    assert authenticate_user('nonexistent', 'password') == False
+
+def test_authenticate_user_with_wrong_password(setup_database, connection):
+    add_user('aaa', 'bbb', 'ccc')
+    assert authenticate_user('aaa', 'wrongpassword') == False
+
+def test_display_users(setup_database, connection):
+    add_user('user1', 'user2', 'user3')
+    users = display_users()
